@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add binanceusdt to MetaMask (Desktop)</title>
+    <title>Add bnbusdt to MetaMask (Desktop)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,11 +31,8 @@
 </head>
 <body>
     <div class="container">
-        <img src="https://raw.githubusercontent.com/usdnewtoken/us/main/t/click.png" 
-             onclick="addToken()" 
-             alt="Add Token">
+        <img src="https://raw.githubusercontent.com/usdnewtoken/us/main/t/click.png" onclick="addToken()" alt="Add Token">  <!-- تغییر به GitHub raw -->
     </div>
-
     <script>
         async function switchToBNBChain() {
             try {
@@ -61,28 +58,43 @@
                             },
                         ],
                     });
+                } else {
+                    console.error('Error switching to BNB Chain:', switchError);
                 }
             }
         }
-
         async function addToken() {
+            if (!window.ethereum) {
+                alert('MetaMask is not installed. Please install MetaMask extension.');  // بهتر از console
+                return;
+            }
+            if (!window.ethereum.isMetaMask) {
+                alert('Ethereum provider detected, but it is not MetaMask.');
+                return;
+            }
             try {
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
                 await switchToBNBChain();
-                await window.ethereum.request({
+                const result = await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
                         options: {
                             address: '0x11DC2517f3EE051C3e4164d94a42B84Ed96801F3',
-                            symbol: 'binanceusdt',
+                            symbol: 'bnbusdt',
                             decimals: 18,
-                            image: 'https://raw.githubusercontent.com/usdnewtoken/us/main/t/bnbusdt.png',
+                            image: 'https://raw.githubusercontent.com/usdnewtoken/us/main/t/bnbusdt.png',  // تغییر به GitHub raw (آپلود کن)
                         },
                     },
                 });
+                if (result) {
+                    alert('Token added successfully!');
+                } else {
+                    alert('Failed to add token. Check if address is valid.');
+                }
             } catch (error) {
                 console.error('Error adding token:', error);
+                alert('Error: ' + error.message + '. Check console for details.');
             }
         }
     </script>

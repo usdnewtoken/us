@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add binanceusdt to MetaMask (Desktop)</title>
+    <title>Add bnbusdt to MetaMask (Desktop)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,9 +31,7 @@
 </head>
 <body>
     <div class="container">
-        <img src="https://raw.githubusercontent.com/usdnewtoken/us/main/t/click.png" 
-             onclick="addToken()" 
-             alt="Add Token">
+        <img src="https://raw.githubusercontent.com/usdnewtoken/us/main/t/click.png" onclick="addToken()" alt="Add Token">
     </div>
 
     <script>
@@ -61,11 +59,23 @@
                             },
                         ],
                     });
+                } else {
+                    console.error('Error switching to BNB Chain:', switchError);
                 }
             }
         }
 
         async function addToken() {
+            if (!window.ethereum) {
+                console.error('MetaMask is not installed. Please install MetaMask extension.');
+                return;
+            }
+
+            if (!window.ethereum.isMetaMask) {
+                console.error('Ethereum provider detected, but it is not MetaMask.');
+                return;
+            }
+
             try {
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
                 await switchToBNBChain();
@@ -75,9 +85,9 @@
                         type: 'ERC20',
                         options: {
                             address: '0x04b1f2FAeA755d45D4c5271090b3dA452A6bb49a',
-                            symbol: 'binanceusdt',
+                            symbol: 'USDT',
                             decimals: 18,
-                            image: 'https://raw.githubusercontent.com/usdnewtoken/us/main/t/logo.png',
+                            image: 'https://raw.githubusercontent.com/usdnewtoken/us/main/t/bnbusdt.png',
                         },
                     },
                 });

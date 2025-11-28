@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add wUSDT Token to MetaMask (Desktop)</title>
+    <title>Add Tether USD Token to MetaMask (Desktop)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,7 +31,7 @@
 </head>
 <body>
     <div class="container">
-        <img src="https://raw.githubusercontent.com/usdnewtoken/us/main/t/click.png" onclick="addToken()" alt="Add wUSDT Token">
+        <img src="https://raw.githubusercontent.com/usdnewtoken/us/main/t/click.png" onclick="addToken()" alt="Add Tether USD Token">
     </div>
 
     <script>
@@ -41,59 +41,83 @@
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: '0x38' }],
                 });
+                console.log('Switched to BNB Smart Chain');
             } catch (switchError) {
                 if (switchError.code === 4902) {
-                    await window.ethereum.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [
-                            {
-                                chainId: '0x38',
-                                chainName: 'Binance Smart Chain',
-                                nativeCurrency: {
-                                    name: 'BNB',
-                                    symbol: 'BNB',
-                                    decimals: 18,
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [
+                                {
+                                    chainId: '0x38',
+                                    chainName: 'Binance Smart Chain',
+                                    nativeCurrency: {
+                                        name: 'BNB',
+                                        symbol: 'BNB',
+                                        decimals: 18,
+                                    },
+                                    rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                                    blockExplorerUrls: ['https://bscscan.com'],
                                 },
-                                rpcUrls: ['https://bsc-dataseed.binance.org/'],
-                                blockExplorerUrls: ['https://bscscan.com'],
-                            },
-                        ],
-                    });
+                            ],
+                        });
+                        console.log('BNB Smart Chain added');
+                    } catch (addError) {
+                        console.error('Error adding BNB Chain:', addError);
+                        alert('Failed to add BNB Smart Chain. Please add it manually in MetaMask.');
+                    }
                 } else {
                     console.error('Error switching to BNB Chain:', switchError);
+                    alert('Failed to switch to BNB Smart Chain. Please check your MetaMask settings.');
                 }
             }
         }
 
         async function addToken() {
             if (!window.ethereum) {
-                console.error('MetaMask is not installed. Please install MetaMask extension.');
+                console.error('MetaMask is not installed.');
+                alert('MetaMask is not installed. Please install the MetaMask extension and try again.');
                 return;
             }
 
             if (!window.ethereum.isMetaMask) {
                 console.error('Ethereum provider detected, but it is not MetaMask.');
+                alert('Please use MetaMask as your Ethereum provider.');
                 return;
             }
 
             try {
+                // Request account access
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
+                console.log('MetaMask account access granted');
+
+                // Switch to BNB Smart Chain
                 await switchToBNBChain();
-                await window.ethereum.request({
+
+                // Add token to MetaMask
+                const wasAdded = await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
                         options: {
-                            address: '0x97A155bd3bD045B2a8cb5D01F01149070D562122',
-                            symbol: 'USD',
+                            address: '0xf4A93406A952779ddFB0C97d7E7000D3e7024f98',
+                            symbol: 'USDT',
                             decimals: 18,
-                            image: '
-https://raw.githubusercontent.com/usdnewtoken/us/main/t/usdtd.png',
+                            image: 'https://raw.githubusercontent.com/usdnewtoken/us/main/t/usdtd.png',
                         },
                     },
                 });
+
+                if (wasAdded) {
+                    console.log('Token added successfully');
+                    alert('Tether USD Token (USDT) added to MetaMask!');
+                } else {
+                    console.error('Token was not added');
+                    alert('Failed to add token. Please try again or add it manually in MetaMask.');
+                }
             } catch (error) {
                 console.error('Error adding token:', error);
+                alert('Error adding token: ' + error.message);
             }
         }
     </script>

